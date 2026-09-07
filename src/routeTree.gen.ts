@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResponsesRouteImport } from './routes/responses'
 import { Route as ReviewsRouteImport } from './routes/reviews'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResponsesRoute = ResponsesRouteImport.update({
+  id: '/responses',
+  path: '/responses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReviewsRoute = ReviewsRouteImport.update({
@@ -25,27 +31,31 @@ const ReviewsRoute = ReviewsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/reviews'
+  fullPaths: '/' | '/responses' | '/reviews'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/reviews'
-  id: '__root__' | '/' | '/reviews'
+  to: '/' | '/responses' | '/reviews'
+  id: '__root__' | '/' | '/responses' | '/reviews'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ResponsesRoute: typeof ResponsesRoute
   ReviewsRoute: typeof ReviewsRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/responses': {
+      id: '/responses'
+      path: '/responses'
+      fullPath: '/responses'
+      preLoaderRoute: typeof ResponsesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reviews': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ResponsesRoute: ResponsesRoute,
   ReviewsRoute: ReviewsRoute,
 }
 export const routeTree = rootRouteImport
