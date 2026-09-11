@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as CompetitorsRouteImport } from './routes/competitors'
+import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as LocationsRouteImport } from './routes/locations'
 import { Route as ResponsesRouteImport } from './routes/responses'
 import { Route as ReviewsRouteImport } from './routes/reviews'
@@ -29,6 +31,16 @@ const AlertsRoute = AlertsRouteImport.update({
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompetitorsRoute = CompetitorsRouteImport.update({
+  id: '/competitors',
+  path: '/competitors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LocationsRoute = LocationsRouteImport.update({
@@ -51,6 +63,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/analytics': typeof AnalyticsRoute
+  '/competitors': typeof CompetitorsRoute
+  '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
@@ -59,6 +73,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/analytics': typeof AnalyticsRoute
+  '/competitors': typeof CompetitorsRoute
+  '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
@@ -68,6 +84,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
   '/analytics': typeof AnalyticsRoute
+  '/competitors': typeof CompetitorsRoute
+  '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
@@ -75,14 +93,31 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/alerts' | '/analytics' | '/locations' | '/responses' | '/reviews'
+    | '/'
+    | '/alerts'
+    | '/analytics'
+    | '/competitors'
+    | '/feedback'
+    | '/locations'
+    | '/responses'
+    | '/reviews'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/alerts' | '/analytics' | '/locations' | '/responses' | '/reviews'
+  to:
+    | '/'
+    | '/alerts'
+    | '/analytics'
+    | '/competitors'
+    | '/feedback'
+    | '/locations'
+    | '/responses'
+    | '/reviews'
   id:
     | '__root__'
     | '/'
     | '/alerts'
     | '/analytics'
+    | '/competitors'
+    | '/feedback'
     | '/locations'
     | '/responses'
     | '/reviews'
@@ -92,6 +127,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  CompetitorsRoute: typeof CompetitorsRoute
+  FeedbackRoute: typeof FeedbackRoute
   LocationsRoute: typeof LocationsRoute
   ResponsesRoute: typeof ResponsesRoute
   ReviewsRoute: typeof ReviewsRoute
@@ -118,6 +155,20 @@ declare module '@tanstack/react-router' {
       path: '/analytics'
       fullPath: '/analytics'
       preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/competitors': {
+      id: '/competitors'
+      path: '/competitors'
+      fullPath: '/competitors'
+      preLoaderRoute: typeof CompetitorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/locations': {
@@ -148,6 +199,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
   AnalyticsRoute: AnalyticsRoute,
+  CompetitorsRoute: CompetitorsRoute,
+  FeedbackRoute: FeedbackRoute,
   LocationsRoute: LocationsRoute,
   ResponsesRoute: ResponsesRoute,
   ReviewsRoute: ReviewsRoute,
