@@ -15,8 +15,10 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as CompetitorsRouteImport } from './routes/competitors'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as LocationsRouteImport } from './routes/locations'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ResponsesRouteImport } from './routes/responses'
 import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as SettingsRouteImport } from './routes/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,6 +50,11 @@ const LocationsRoute = LocationsRouteImport.update({
   path: '/locations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResponsesRoute = ResponsesRouteImport.update({
   id: '/responses',
   path: '/responses',
@@ -58,6 +65,11 @@ const ReviewsRoute = ReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,8 +78,10 @@ export interface FileRoutesByFullPath {
   '/competitors': typeof CompetitorsRoute
   '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
+  '/reports': typeof ReportsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,8 +90,10 @@ export interface FileRoutesByTo {
   '/competitors': typeof CompetitorsRoute
   '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
+  '/reports': typeof ReportsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,8 +103,10 @@ export interface FileRoutesById {
   '/competitors': typeof CompetitorsRoute
   '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
+  '/reports': typeof ReportsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,8 +117,10 @@ export interface FileRouteTypes {
     | '/competitors'
     | '/feedback'
     | '/locations'
+    | '/reports'
     | '/responses'
     | '/reviews'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,8 +129,10 @@ export interface FileRouteTypes {
     | '/competitors'
     | '/feedback'
     | '/locations'
+    | '/reports'
     | '/responses'
     | '/reviews'
+    | '/settings'
   id:
     | '__root__'
     | '/'
@@ -119,8 +141,10 @@ export interface FileRouteTypes {
     | '/competitors'
     | '/feedback'
     | '/locations'
+    | '/reports'
     | '/responses'
     | '/reviews'
+    | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -130,8 +154,10 @@ export interface RootRouteChildren {
   CompetitorsRoute: typeof CompetitorsRoute
   FeedbackRoute: typeof FeedbackRoute
   LocationsRoute: typeof LocationsRoute
+  ReportsRoute: typeof ReportsRoute
   ResponsesRoute: typeof ResponsesRoute
   ReviewsRoute: typeof ReviewsRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/responses': {
       id: '/responses'
       path: '/responses'
@@ -192,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -202,8 +242,10 @@ const rootRouteChildren: RootRouteChildren = {
   CompetitorsRoute: CompetitorsRoute,
   FeedbackRoute: FeedbackRoute,
   LocationsRoute: LocationsRoute,
+  ReportsRoute: ReportsRoute,
   ResponsesRoute: ResponsesRoute,
   ReviewsRoute: ReviewsRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
