@@ -15,6 +15,7 @@ import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as CompetitorsRouteImport } from './routes/competitors'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as LocationsRouteImport } from './routes/locations'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ResponsesRouteImport } from './routes/responses'
 import { Route as ReviewsRouteImport } from './routes/reviews'
@@ -50,6 +51,11 @@ const LocationsRoute = LocationsRouteImport.update({
   path: '/locations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/competitors': typeof CompetitorsRoute
   '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
+  '/login': typeof LoginRoute
   '/reports': typeof ReportsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/competitors': typeof CompetitorsRoute
   '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
+  '/login': typeof LoginRoute
   '/reports': typeof ReportsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/competitors': typeof CompetitorsRoute
   '/feedback': typeof FeedbackRoute
   '/locations': typeof LocationsRoute
+  '/login': typeof LoginRoute
   '/reports': typeof ReportsRoute
   '/responses': typeof ResponsesRoute
   '/reviews': typeof ReviewsRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/competitors'
     | '/feedback'
     | '/locations'
+    | '/login'
     | '/reports'
     | '/responses'
     | '/reviews'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/competitors'
     | '/feedback'
     | '/locations'
+    | '/login'
     | '/reports'
     | '/responses'
     | '/reviews'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/competitors'
     | '/feedback'
     | '/locations'
+    | '/login'
     | '/reports'
     | '/responses'
     | '/reviews'
@@ -154,6 +166,7 @@ export interface RootRouteChildren {
   CompetitorsRoute: typeof CompetitorsRoute
   FeedbackRoute: typeof FeedbackRoute
   LocationsRoute: typeof LocationsRoute
+  LoginRoute: typeof LoginRoute
   ReportsRoute: typeof ReportsRoute
   ResponsesRoute: typeof ResponsesRoute
   ReviewsRoute: typeof ReviewsRoute
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reports': {
       id: '/reports'
       path: '/reports'
@@ -242,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompetitorsRoute: CompetitorsRoute,
   FeedbackRoute: FeedbackRoute,
   LocationsRoute: LocationsRoute,
+  LoginRoute: LoginRoute,
   ReportsRoute: ReportsRoute,
   ResponsesRoute: ResponsesRoute,
   ReviewsRoute: ReviewsRoute,
