@@ -31,8 +31,8 @@ function LocationsPage() {
   const toggle = (id: string) =>
     setCompare((c) => (c.includes(id) ? c.filter((x) => x !== id) : c.length < 3 ? [...c, id] : c));
 
-  const best = [...branches].sort((a, b) => b.score - a.score)[0];
-  const worst = [...branches].sort((a, b) => a.score - b.score)[0];
+  const best = [...branches].sort((a, b) => b.score - a.score)[0]!;
+  const worst = [...branches].sort((a, b) => a.score - b.score)[0]!;
 
   return (
     <AppShell>

@@ -54,7 +54,7 @@ export const navItems = [
   { id: "settings", to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-function NavList({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
+function NavList({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (() => void) | undefined }) {
   const { can } = useApp();
   return (
     <nav className="flex flex-col gap-1 px-3">
@@ -107,7 +107,7 @@ function NavList({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (
   );
 }
 
-function SidebarInner({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
+function SidebarInner({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: (() => void) | undefined }) {
   const { role } = useApp();
   return (
     <div className="flex h-full flex-col">
