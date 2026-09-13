@@ -14,7 +14,146 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alerts: {
+        Row: {
+          created_at: string
+          detail: string
+          id: string
+          kind: string
+          location_name: string
+          resolved: boolean
+          review_id: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          detail: string
+          id?: string
+          kind: string
+          location_name?: string
+          resolved?: boolean
+          review_id?: string | null
+          severity?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string
+          id?: string
+          kind?: string
+          location_name?: string
+          resolved?: boolean
+          review_id?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      connected_platforms: {
+        Row: {
+          account_ref: string | null
+          created_at: string
+          display_name: string
+          id: string
+          last_synced_at: string | null
+          platform: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          account_ref?: string | null
+          created_at?: string
+          display_name: string
+          id?: string
+          last_synced_at?: string | null
+          platform: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          account_ref?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          last_synced_at?: string | null
+          platform?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          author: string
+          body: string
+          created_at: string
+          external_created_at: string
+          id: string
+          location_name: string
+          platform: string
+          priority: string
+          rating: number
+          replied_at: string | null
+          replied_by: string | null
+          reply: string | null
+          sentiment: string
+          status: string
+          tags: string[]
+          title: string | null
+          unread: boolean
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          body: string
+          created_at?: string
+          external_created_at?: string
+          id?: string
+          location_name?: string
+          platform: string
+          priority?: string
+          rating?: number
+          replied_at?: string | null
+          replied_by?: string | null
+          reply?: string | null
+          sentiment?: string
+          status?: string
+          tags?: string[]
+          title?: string | null
+          unread?: boolean
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          body?: string
+          created_at?: string
+          external_created_at?: string
+          id?: string
+          location_name?: string
+          platform?: string
+          priority?: string
+          rating?: number
+          replied_at?: string | null
+          replied_by?: string | null
+          reply?: string | null
+          sentiment?: string
+          status?: string
+          tags?: string[]
+          title?: string | null
+          unread?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
