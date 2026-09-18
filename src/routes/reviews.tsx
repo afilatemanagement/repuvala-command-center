@@ -43,8 +43,14 @@ function ReviewCenter() {
   const [platform, setPlatform] = useState<PlatformId | "all">("all");
   const [status, setStatus] = useState("All");
   const [query, setQuery] = useState("");
-  const [openId, setOpenId] = useState<string | null>("r1");
+  const [openId, setOpenId] = useState<string | null>(null);
   const [loc, setLoc] = useState("all");
+
+  const { data: reviews = [], isLoading } = useLiveReviews();
+  const { data: connected = [] } = useConnectedPlatforms();
+  const connectedIds = new Set(
+    connected.filter((c) => c.status === "connected").map((c) => c.platform),
+  );
 
   const list = useMemo(
     () =>
@@ -57,8 +63,9 @@ function ReviewCenter() {
         if (query && !(`${r.author} ${r.body}`.toLowerCase().includes(query.toLowerCase()))) return false;
         return true;
       }),
-    [platform, status, query, loc],
+    [reviews, platform, status, query, loc],
   );
+
 
   return (
     <AppShell>
