@@ -122,7 +122,7 @@ function ReviewCenter() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors",
                 platform === p ? "border-primary bg-accent text-primary" : "hover:bg-muted",
-                !platforms[p].connected && "opacity-50",
+                !connectedIds.has(p) && "opacity-50",
               )}
             >
               <PlatformIcon id={p} size="sm" />
@@ -158,11 +158,17 @@ function ReviewCenter() {
       </div>
 
       <Section
-        title={`${list.length} reviews`}
+        title={isLoading ? "Loading reviews…" : `${list.length} reviews`}
         description="Click a review to expand full detail and response history"
         bodyClassName="p-0"
       >
-        {list.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3 p-5">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="skeleton-shimmer h-16 rounded-xl" />
+            ))}
+          </div>
+        ) : list.length === 0 ? (
           <div className="p-6">
             <EmptyState
               icon={Inbox}
