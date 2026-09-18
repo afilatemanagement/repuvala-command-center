@@ -12,7 +12,7 @@ import {
   EmptyState,
 } from "@/components/app/primitives";
 import { Button } from "@/components/ui/button";
-import { reviews } from "@/lib/mock-data";
+import { useLiveReviews, usePublishReply } from "@/lib/repuvala-db";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -48,8 +48,11 @@ const templates = [
 
 function ResponseCenter() {
   const [queue, setQueue] = useState<(typeof queues)[number]["id"]>("priority");
-  const [selected, setSelected] = useState<string | null>("r1");
+  const [selected, setSelected] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
+
+  const { data: reviews = [], isLoading } = useLiveReviews();
+  const publish = usePublishReply();
 
   const filtered = reviews.filter((r) =>
     queue === "priority"
@@ -60,6 +63,11 @@ function ResponseCenter() {
   );
   const review = reviews.find((r) => r.id === selected) ?? filtered[0];
 
+  const awaiting = reviews.filter((r) => r.status !== "replied").length;
+  const highPriority = reviews.filter((r) => r.priority === "high" && r.status !== "replied").length;
+  const responded = reviews.filter((r) => r.status === "replied").length;
+  const responseRate = reviews.length ? Math.round((responded / reviews.length) * 100) : 0;
+
   return (
     <AppShell>
       <PageHeader
@@ -69,11 +77,12 @@ function ResponseCenter() {
       />
 
       <div className="stagger mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Awaiting response" value="23" sub="5 breach SLA in 4 hours" icon={Clock} tone="rating" />
-        <StatCard label="High priority" value="5" sub="1★–2★ or escalated" icon={AlertOctagon} tone="negative" />
-        <StatCard label="Responded today" value="34" sub="Team of 6 agents" trend={9} icon={CheckCircle2} tone="positive" />
-        <StatCard label="Median reply time" value="3h 12m" sub="Target: under 4h" trend={-12} icon={Send} tone="primary" />
+        <StatCard label="Awaiting response" value={awaiting} sub="Across every connected platform" icon={Clock} tone="rating" />
+        <StatCard label="High priority" value={highPriority} sub="1★–2★ or escalated" icon={AlertOctagon} tone="negative" />
+        <StatCard label="Responded" value={responded} sub={`${responseRate}% of all reviews`} icon={CheckCircle2} tone="positive" />
+        <StatCard label="Total reviews" value={reviews.length} sub="Stored in your workspace" icon={Send} tone="primary" />
       </div>
+
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
         <Section bodyClassName="p-0">
@@ -94,7 +103,13 @@ function ResponseCenter() {
               </button>
             ))}
           </div>
-          {filtered.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-3 p-5">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="skeleton-shimmer h-16 rounded-xl" />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="p-5">
               <EmptyState icon={Inbox} title="Queue is clear" description="Nothing left in this queue. Great work — check another queue or review analytics." />
             </div>
@@ -179,8 +194,22 @@ function ResponseCenter() {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2 border-t pt-4">
-              <Button onClick={() => toast.success("Response published (prototype)", { description: `Reply sent to ${review.author}.` })}>
-                <Send /> Publish response
+              <Button
+                disabled={!draft.trim() || publish.isPending}
+                onClick={() =>
+                  publish.mutate(
+                    { id: review.id, reply: draft.trim() },
+                    {
+                      onSuccess: () => {
+                        setDraft("");
+                        toast.success("Response published", { description: `Reply saved for ${review.author}.` });
+                      },
+                      onError: (e) => toast.error("Could not publish", { description: (e as Error).message }),
+                    },
+                  )
+                }
+              >
+                <Send /> {publish.isPending ? "Publishing…" : "Publish response"}
               </Button>
               <Button variant="outline" onClick={() => toast("Draft saved")}><Save /> Save draft</Button>
               <Button variant="outline">Assign</Button>

@@ -12,7 +12,8 @@ import {
   SentimentDot,
 } from "@/components/app/primitives";
 import { Button } from "@/components/ui/button";
-import { reviews, platforms, locations, type PlatformId } from "@/lib/mock-data";
+import { platforms, locations, type PlatformId } from "@/lib/mock-data";
+import { useConnectedPlatforms, useLiveReviews } from "@/lib/repuvala-db";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/reviews")({
@@ -42,8 +43,14 @@ function ReviewCenter() {
   const [platform, setPlatform] = useState<PlatformId | "all">("all");
   const [status, setStatus] = useState("All");
   const [query, setQuery] = useState("");
-  const [openId, setOpenId] = useState<string | null>("r1");
+  const [openId, setOpenId] = useState<string | null>(null);
   const [loc, setLoc] = useState("all");
+
+  const { data: reviews = [], isLoading } = useLiveReviews();
+  const { data: connected = [] } = useConnectedPlatforms();
+  const connectedIds = new Set(
+    connected.filter((c) => c.status === "connected").map((c) => c.platform),
+  );
 
   const list = useMemo(
     () =>
@@ -56,8 +63,9 @@ function ReviewCenter() {
         if (query && !(`${r.author} ${r.body}`.toLowerCase().includes(query.toLowerCase()))) return false;
         return true;
       }),
-    [platform, status, query, loc],
+    [reviews, platform, status, query, loc],
   );
+
 
   return (
     <AppShell>
@@ -114,7 +122,7 @@ function ReviewCenter() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold transition-colors",
                 platform === p ? "border-primary bg-accent text-primary" : "hover:bg-muted",
-                !platforms[p].connected && "opacity-50",
+                !connectedIds.has(p) && "opacity-50",
               )}
             >
               <PlatformIcon id={p} size="sm" />
@@ -150,11 +158,17 @@ function ReviewCenter() {
       </div>
 
       <Section
-        title={`${list.length} reviews`}
+        title={isLoading ? "Loading reviews…" : `${list.length} reviews`}
         description="Click a review to expand full detail and response history"
         bodyClassName="p-0"
       >
-        {list.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3 p-5">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="skeleton-shimmer h-16 rounded-xl" />
+            ))}
+          </div>
+        ) : list.length === 0 ? (
           <div className="p-6">
             <EmptyState
               icon={Inbox}
