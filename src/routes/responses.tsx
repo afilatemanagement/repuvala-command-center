@@ -194,8 +194,22 @@ function ResponseCenter() {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2 border-t pt-4">
-              <Button onClick={() => toast.success("Response published (prototype)", { description: `Reply sent to ${review.author}.` })}>
-                <Send /> Publish response
+              <Button
+                disabled={!draft.trim() || publish.isPending}
+                onClick={() =>
+                  publish.mutate(
+                    { id: review.id, reply: draft.trim() },
+                    {
+                      onSuccess: () => {
+                        setDraft("");
+                        toast.success("Response published", { description: `Reply saved for ${review.author}.` });
+                      },
+                      onError: (e) => toast.error("Could not publish", { description: (e as Error).message }),
+                    },
+                  )
+                }
+              >
+                <Send /> {publish.isPending ? "Publishing…" : "Publish response"}
               </Button>
               <Button variant="outline" onClick={() => toast("Draft saved")}><Save /> Save draft</Button>
               <Button variant="outline">Assign</Button>
