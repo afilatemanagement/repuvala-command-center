@@ -55,6 +55,7 @@ export type LiveReview = Review & { external_created_at: string };
 function toReview(row: ReviewRow): LiveReview {
   return {
     id: row.id,
+    external_created_at: row.external_created_at,
     platform: row.platform as PlatformId,
     author: row.author,
     initials: initialsOf(row.author),
@@ -108,7 +109,7 @@ function toAlert(row: AlertRow): Alert {
 export function useLiveReviews() {
   return useQuery({
     queryKey: ["reviews"],
-    queryFn: async (): Promise<Review[]> => {
+    queryFn: async (): Promise<LiveReview[]> => {
       const { data, error } = await supabase
         .from("reviews")
         .select("*")
