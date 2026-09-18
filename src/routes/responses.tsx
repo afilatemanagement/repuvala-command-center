@@ -48,8 +48,11 @@ const templates = [
 
 function ResponseCenter() {
   const [queue, setQueue] = useState<(typeof queues)[number]["id"]>("priority");
-  const [selected, setSelected] = useState<string | null>("r1");
+  const [selected, setSelected] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
+
+  const { data: reviews = [], isLoading } = useLiveReviews();
+  const publish = usePublishReply();
 
   const filtered = reviews.filter((r) =>
     queue === "priority"
@@ -60,6 +63,11 @@ function ResponseCenter() {
   );
   const review = reviews.find((r) => r.id === selected) ?? filtered[0];
 
+  const awaiting = reviews.filter((r) => r.status !== "replied").length;
+  const highPriority = reviews.filter((r) => r.priority === "high" && r.status !== "replied").length;
+  const responded = reviews.filter((r) => r.status === "replied").length;
+  const responseRate = reviews.length ? Math.round((responded / reviews.length) * 100) : 0;
+
   return (
     <AppShell>
       <PageHeader
@@ -69,11 +77,12 @@ function ResponseCenter() {
       />
 
       <div className="stagger mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Awaiting response" value="23" sub="5 breach SLA in 4 hours" icon={Clock} tone="rating" />
-        <StatCard label="High priority" value="5" sub="1★–2★ or escalated" icon={AlertOctagon} tone="negative" />
-        <StatCard label="Responded today" value="34" sub="Team of 6 agents" trend={9} icon={CheckCircle2} tone="positive" />
-        <StatCard label="Median reply time" value="3h 12m" sub="Target: under 4h" trend={-12} icon={Send} tone="primary" />
+        <StatCard label="Awaiting response" value={awaiting} sub="Across every connected platform" icon={Clock} tone="rating" />
+        <StatCard label="High priority" value={highPriority} sub="1★–2★ or escalated" icon={AlertOctagon} tone="negative" />
+        <StatCard label="Responded" value={responded} sub={`${responseRate}% of all reviews`} icon={CheckCircle2} tone="positive" />
+        <StatCard label="Total reviews" value={reviews.length} sub="Stored in your workspace" icon={Send} tone="primary" />
       </div>
+
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
         <Section bodyClassName="p-0">
