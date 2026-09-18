@@ -47,7 +47,13 @@ const tabs = ["Unresolved", "All", "Resolved"] as const;
 
 function AlertsPage() {
   const [tab, setTab] = useState<(typeof tabs)[number]>("Unresolved");
+  const { data: alerts = [], isLoading } = useLiveAlerts();
+  const resolve = useResolveAlert();
   const list = alerts.filter((a) => (tab === "All" ? true : tab === "Resolved" ? a.resolved : !a.resolved));
+
+  const open = alerts.filter((a) => !a.resolved);
+  const countBy = (s: Alert["severity"]) => open.filter((a) => a.severity === s).length;
+  const resolvedCount = alerts.filter((a) => a.resolved).length;
 
   return (
     <AppShell>
@@ -58,17 +64,26 @@ function AlertsPage() {
         actions={
           <>
             <Button variant="outline"><BellOff /> Alert rules</Button>
-            <Button onClick={() => toast.success("All alerts marked reviewed (prototype)")}><CheckCheck /> Mark all reviewed</Button>
+            <Button
+              disabled={open.length === 0 || resolve.isPending}
+              onClick={() => {
+                open.forEach((a) => resolve.mutate({ id: a.id, resolved: true }));
+                toast.success(`${open.length} alerts resolved`);
+              }}
+            >
+              <CheckCheck /> Resolve all
+            </Button>
           </>
         }
       />
 
       <div className="stagger mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Critical" value="1" sub="Immediate action" icon={ShieldAlert} tone="negative" />
-        <StatCard label="High" value="2" sub="Within 4 hours" icon={TrendingDown} tone="rating" />
-        <StatCard label="Medium" value="1" sub="Within 24 hours" icon={Clock} tone="default" />
-        <StatCard label="Avg time to resolve" value="6h 40m" sub="Down from 11h" trend={-38} icon={CheckCheck} tone="positive" />
+        <StatCard label="Critical" value={countBy("critical")} sub="Immediate action" icon={ShieldAlert} tone="negative" />
+        <StatCard label="High" value={countBy("high")} sub="Within 4 hours" icon={TrendingDown} tone="rating" />
+        <StatCard label="Medium" value={countBy("medium")} sub="Within 24 hours" icon={Clock} tone="default" />
+        <StatCard label="Resolved" value={resolvedCount} sub="Closed in this workspace" icon={CheckCheck} tone="positive" />
       </div>
+
 
       <div className="mb-4 inline-flex rounded-lg border bg-card p-1">
         {tabs.map((t) => (
