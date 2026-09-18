@@ -50,7 +50,9 @@ export interface ReviewRow {
   external_created_at: string;
 }
 
-function toReview(row: ReviewRow): Review {
+export type LiveReview = Review & { external_created_at: string };
+
+function toReview(row: ReviewRow): LiveReview {
   return {
     id: row.id,
     platform: row.platform as PlatformId,
