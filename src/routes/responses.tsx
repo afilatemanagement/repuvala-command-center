@@ -103,7 +103,13 @@ function ResponseCenter() {
               </button>
             ))}
           </div>
-          {filtered.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-3 p-5">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="skeleton-shimmer h-16 rounded-xl" />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="p-5">
               <EmptyState icon={Inbox} title="Queue is clear" description="Nothing left in this queue. Great work — check another queue or review analytics." />
             </div>
